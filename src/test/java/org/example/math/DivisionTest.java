@@ -1,0 +1,62 @@
+package org.example.math;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+class DivisionTest {
+
+    private Division division;
+
+    //given
+    @BeforeEach
+    void setUp() {
+        division = new Division();
+    }
+
+    @Test
+    void givenNegativeAndPositiveValueShouldReturnNegative() {
+        //when
+        double result = division.divide(-1.0, 3.0);
+
+        //then
+        assertThat(result).isEqualTo(-1.0 / 3.0);
+    }
+
+    @Test
+    void givenTwoNegativeValueShouldReturnPositive() {
+        //when
+        double result = division.divide(-3.0, -3.0);
+
+        //then
+        assertThat(result).isPositive();
+    }
+
+    @Test
+    void givenFirstZeroAndSecondPositiveShouldReturnZero() {
+        //when
+        double result = division.divide(0, 5.0);
+
+        //then
+        assertThat(result).isZero();
+    }
+
+    @Test
+    void givenFirstPositiveAndSecondZeroShouldReturnException() {
+        boolean res = false;
+        //when
+        try {
+            double result = division.divide(2.0, 0);
+
+        } catch (ArithmeticException exception) {
+            res = true;
+        }
+
+        //then
+        assertThat(res).isTrue();
+
+    }
+}
