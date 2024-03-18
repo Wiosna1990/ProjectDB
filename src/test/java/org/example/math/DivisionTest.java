@@ -3,6 +3,7 @@ package org.example.math;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,17 +47,11 @@ class DivisionTest {
 
     @Test
     void givenFirstPositiveAndSecondZeroShouldReturnException() {
-        boolean res = false;
         //when
-        try {
-            double result = division.divide(2.0, 0);
-
-        } catch (ArithmeticException exception) {
-            res = true;
-        }
+        Throwable thrown = catchThrowable(() -> division.divide(2.0, 0));
 
         //then
-        assertThat(res).isTrue();
+        assertThat(thrown).isInstanceOf(ArithmeticException.class);
 
     }
 }
