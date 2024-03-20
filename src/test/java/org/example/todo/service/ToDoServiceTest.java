@@ -36,7 +36,17 @@ class ToDoServiceTest {
         assertThat(saveExecuted).isTrue();
     }
 
+    @Test
+    void shouldRemoveToDo(){
+        //when
+        toDoService.removeToDo(UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087"));
+
+        //then
+        assertThat(saveExecuted).isTrue();
+    }
+
     private class ToDoRepositoryStub implements ToDoRepository{
+
 
         @Override
         public void save(ToDo todo) {
@@ -52,7 +62,8 @@ class ToDoServiceTest {
 
         @Override
         public void remove(UUID uuid) {
-
+            assertThat(uuid).isEqualTo(UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087"));
+            saveExecuted = true;
         }
     }
 }
