@@ -1,12 +1,15 @@
 package org.example.todo.service;
 
+
 import org.example.todo.dao.ToDoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +39,24 @@ class ToDoServiceTest {
         assertThat(saveExecuted).isTrue();
     }
 
+    @Test
+    void shouldGetAllToDo(){
+        //when
+        toDoService.viewList();
+
+        //then
+        assertThat(saveExecuted).isTrue();
+    }
+
     private class ToDoRepositoryStub implements ToDoRepository{
+
+        private List<ToDo> toDoList = new ArrayList<>();
+
+        public ToDoRepositoryStub()
+        {
+            toDoList.add(new ToDo(UUID.randomUUID(), "zadanie1", LocalDateTime.now(clock)));
+        }
+
 
         @Override
         public void save(ToDo todo) {
@@ -47,7 +67,12 @@ class ToDoServiceTest {
 
         @Override
         public List<ToDo> getAll() {
-            return null;
+
+            assertThat(toDoList.get(0).action()).isEqualTo("zadanie1");
+            assertThat(toDoList.get(0).additionDateTime()).isEqualTo("2023-03-18T17:17:30.00");
+            saveExecuted = true;
+            return toDoList;
+
         }
 
         @Override

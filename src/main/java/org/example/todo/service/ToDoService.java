@@ -4,6 +4,8 @@ import org.example.todo.dao.ToDoRepository;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ToDoService {
@@ -21,4 +23,10 @@ public class ToDoService {
         ToDo todo = new ToDo(UUID.randomUUID(), action, LocalDateTime.now(clock));
         toDoRepository.save(todo);
     }
+
+    public List<ToDo> viewList(){
+
+        return toDoRepository.getAll();
+    }
+
 }
