@@ -28,7 +28,7 @@ class ToDoServiceTest {
             LocalDateTime.of(2023,3,18,17,17,30)
     );
 
-    private static final List<ToDo> TEST_TODO_LIST = List.of(TEST_TODO);
+
 
 
 
