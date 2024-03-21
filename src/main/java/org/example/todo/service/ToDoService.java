@@ -23,9 +23,15 @@ public class ToDoService {
         toDoRepository.save(todo);
     }
 
+
     public List<ToDo> getToDoList(){
 
         return toDoRepository.getAll();
+    }
+
+  
+    public void removeToDo(UUID uuid){
+        toDoRepository.remove(uuid);
     }
 
 }

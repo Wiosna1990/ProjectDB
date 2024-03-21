@@ -20,6 +20,7 @@ class ToDoServiceTest {
     private boolean saveExecuted = false;
     private ToDoRepository toDoRepository = new ToDoRepositoryStub();
     private ToDoService toDoService;
+
     private static final ToDo TEST_TODO = new ToDo(
             UUID.fromString("72331291-2088-4FA7-BE89-D2A680FF1B69"),
             "zadanie1",
@@ -27,6 +28,9 @@ class ToDoServiceTest {
     );
 
 
+
+    private static final UUID TEST_UUID = UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087");
+    private boolean removeExecuted = false;
 
 
 
@@ -47,12 +51,21 @@ class ToDoServiceTest {
     }
 
     @Test
+
     void shouldGetAllToDo(){
         //when
         List<ToDo> toDoList = toDoService.getToDoList();
 
         //then
         assertThat(toDoList).containsExactly(TEST_TODO);
+
+    void shouldRemoveToDo(){
+        //when
+        toDoService.removeToDo(TEST_UUID);
+
+        //then
+        assertThat(removeExecuted).isTrue();
+
     }
 
     private class ToDoRepositoryStub implements ToDoRepository{
@@ -74,7 +87,8 @@ class ToDoServiceTest {
 
         @Override
         public void remove(UUID uuid) {
-
+            assertThat(uuid).isEqualTo(TEST_UUID);
+            removeExecuted = true;
         }
     }
 }
