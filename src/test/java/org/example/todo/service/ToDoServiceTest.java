@@ -22,6 +22,15 @@ class ToDoServiceTest {
     private boolean saveExecuted = false;
     private ToDoRepository toDoRepository = new ToDoRepositoryStub();
     private ToDoService toDoService;
+    private static final ToDo TEST_TODO = new ToDo(
+            UUID.fromString("72331291-2088-4FA7-BE89-D2A680FF1B69"),
+            "zadanie1",
+            LocalDateTime.of(2023,3,18,17,17,30)
+    );
+
+    private static final List<ToDo> TEST_TODO_LIST = List.of(TEST_TODO);
+    private List<ToDo> toDoList = new ArrayList<>();
+
 
     //given
     @BeforeEach
@@ -45,17 +54,10 @@ class ToDoServiceTest {
         toDoService.viewList();
 
         //then
-        assertThat(saveExecuted).isTrue();
+        assertThat(toDoList).containsExactly(TEST_TODO);
     }
 
     private class ToDoRepositoryStub implements ToDoRepository{
-
-        private List<ToDo> toDoList = new ArrayList<>();
-
-        public ToDoRepositoryStub()
-        {
-            toDoList.add(new ToDo(UUID.randomUUID(), "zadanie1", LocalDateTime.now(clock)));
-        }
 
 
         @Override
@@ -68,10 +70,7 @@ class ToDoServiceTest {
         @Override
         public List<ToDo> getAll() {
 
-            assertThat(toDoList.get(0).action()).isEqualTo("zadanie1");
-            assertThat(toDoList.get(0).additionDateTime()).isEqualTo("2023-03-18T17:17:30.00");
-            saveExecuted = true;
-            return toDoList;
+            return TEST_TODO_LIST;
 
         }
 
