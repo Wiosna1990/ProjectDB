@@ -21,4 +21,8 @@ public class ToDoService {
         ToDo todo = new ToDo(UUID.randomUUID(), action, LocalDateTime.now(clock));
         toDoRepository.save(todo);
     }
+
+    public void removeToDo(UUID uuid){
+        toDoRepository.remove(uuid);
+    }
 }
