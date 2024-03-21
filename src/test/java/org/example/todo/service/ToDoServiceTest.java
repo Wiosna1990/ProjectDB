@@ -58,7 +58,7 @@ class ToDoServiceTest {
 
         //then
         assertThat(toDoList).containsExactly(TEST_TODO);
-
+    }
     void shouldRemoveToDo(){
         //when
         toDoService.removeToDo(TEST_UUID);
