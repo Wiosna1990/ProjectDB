@@ -9,12 +9,10 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ToDoServiceTest {
 
@@ -51,7 +49,7 @@ class ToDoServiceTest {
     @Test
     void shouldGetAllToDo(){
         //when
-        List<ToDo> toDoList = toDoService.viewList();
+        List<ToDo> toDoList = toDoService.getToDoList();
 
         //then
         assertThat(toDoList).containsExactly(TEST_TODO);
