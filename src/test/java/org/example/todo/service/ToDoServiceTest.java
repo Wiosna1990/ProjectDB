@@ -29,7 +29,7 @@ class ToDoServiceTest {
     );
 
     private static final List<ToDo> TEST_TODO_LIST = List.of(TEST_TODO);
-    private List<ToDo> toDoList = new ArrayList<>();
+
 
 
     //given
@@ -51,7 +51,7 @@ class ToDoServiceTest {
     @Test
     void shouldGetAllToDo(){
         //when
-        toDoService.viewList();
+        List<ToDo> toDoList = toDoService.viewList();
 
         //then
         assertThat(toDoList).containsExactly(TEST_TODO);
@@ -70,7 +70,7 @@ class ToDoServiceTest {
         @Override
         public List<ToDo> getAll() {
 
-            return TEST_TODO_LIST;
+            return List.of(TEST_TODO);
 
         }
 
