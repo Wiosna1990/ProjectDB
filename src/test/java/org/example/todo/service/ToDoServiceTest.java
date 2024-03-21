@@ -1,17 +1,18 @@
 package org.example.todo.service;
 
+
 import org.example.todo.dao.ToDoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ToDoServiceTest {
 
@@ -19,8 +20,18 @@ class ToDoServiceTest {
     private boolean saveExecuted = false;
     private ToDoRepository toDoRepository = new ToDoRepositoryStub();
     private ToDoService toDoService;
+
+    private static final ToDo TEST_TODO = new ToDo(
+            UUID.fromString("72331291-2088-4FA7-BE89-D2A680FF1B69"),
+            "zadanie1",
+            LocalDateTime.of(2023,3,18,17,17,30)
+    );
+
+
+
     private static final UUID TEST_UUID = UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087");
     private boolean removeExecuted = false;
+
 
 
     //given
@@ -40,12 +51,21 @@ class ToDoServiceTest {
     }
 
     @Test
+
+    void shouldGetAllToDo(){
+        //when
+        List<ToDo> toDoList = toDoService.getToDoList();
+
+        //then
+        assertThat(toDoList).containsExactly(TEST_TODO);
+    }
     void shouldRemoveToDo(){
         //when
         toDoService.removeToDo(TEST_UUID);
 
         //then
         assertThat(removeExecuted).isTrue();
+
     }
 
     private class ToDoRepositoryStub implements ToDoRepository{
@@ -60,7 +80,9 @@ class ToDoServiceTest {
 
         @Override
         public List<ToDo> getAll() {
-            return null;
+
+            return List.of(TEST_TODO);
+
         }
 
         @Override

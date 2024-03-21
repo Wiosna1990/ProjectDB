@@ -4,6 +4,7 @@ import org.example.todo.dao.ToDoRepository;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class ToDoService {
@@ -22,7 +23,15 @@ public class ToDoService {
         toDoRepository.save(todo);
     }
 
+
+    public List<ToDo> getToDoList(){
+
+        return toDoRepository.getAll();
+    }
+
+  
     public void removeToDo(UUID uuid){
         toDoRepository.remove(uuid);
     }
+
 }
