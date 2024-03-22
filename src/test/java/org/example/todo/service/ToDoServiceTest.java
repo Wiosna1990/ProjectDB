@@ -4,6 +4,9 @@ package org.example.todo.service;
 import org.example.todo.dao.ToDoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -13,12 +16,17 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class ToDoServiceTest {
 
     private Clock clock = Clock.fixed(Instant.parse("2023-03-18T17:17:30.00Z"), ZoneId.of("UTC"));
-    private boolean saveExecuted = false;
-    private ToDoRepository toDoRepository = new ToDoRepositoryStub();
+
+
+    @Mock
+    private ToDoRepository toDoRepository;
     private ToDoService toDoService;
 
     private static final ToDo TEST_TODO = new ToDo(
@@ -27,17 +35,16 @@ class ToDoServiceTest {
             LocalDateTime.of(2023,3,18,17,17,30)
     );
 
-
-
+    @Captor
+    private ArgumentCaptor<ToDo> toDoCaptor;
     private static final UUID TEST_UUID = UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087");
-    private boolean removeExecuted = false;
+
 
 
 
     //given
     @BeforeEach
     void setUp(){
-        saveExecuted = false;
         toDoService = new ToDoService(toDoRepository, clock);
     }
 
@@ -47,48 +54,33 @@ class ToDoServiceTest {
         toDoService.addToDo("zadanie");
 
         //then
-        assertThat(saveExecuted).isTrue();
+        verify(toDoRepository).save(toDoCaptor.capture());
+        ToDo todo = toDoCaptor.getValue();
+        assertThat(todo.action()).isEqualTo("zadanie");
+        assertThat(todo.additionDateTime()).isEqualTo("2023-03-18T17:17:30.00");
+        assertThat(todo.uuid()).isNotNull();
     }
 
     @Test
-
     void shouldGetAllToDo(){
+        //given
+        given(toDoRepository.getAll()).willReturn(List.of(TEST_TODO));
+
         //when
         List<ToDo> toDoList = toDoService.getToDoList();
 
         //then
         assertThat(toDoList).containsExactly(TEST_TODO);
     }
+
+    @Test
     void shouldRemoveToDo(){
         //when
         toDoService.removeToDo(TEST_UUID);
 
         //then
-        assertThat(removeExecuted).isTrue();
+        verify(toDoRepository).remove(TEST_UUID);
 
     }
 
-    private class ToDoRepositoryStub implements ToDoRepository{
-
-
-        @Override
-        public void save(ToDo todo) {
-            assertThat(todo.action()).isEqualTo("zadanie");
-            assertThat(todo.additionDateTime()).isEqualTo("2023-03-18T17:17:30.00");
-            saveExecuted = true;
-        }
-
-        @Override
-        public List<ToDo> getAll() {
-
-            return List.of(TEST_TODO);
-
-        }
-
-        @Override
-        public void remove(UUID uuid) {
-            assertThat(uuid).isEqualTo(TEST_UUID);
-            removeExecuted = true;
-        }
-    }
 }
