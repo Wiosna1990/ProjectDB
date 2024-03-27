@@ -29,7 +29,6 @@ public class ToDoService {
         return toDoRepository.getAll();
     }
 
-  
     public void removeToDo(UUID uuid){
         toDoRepository.remove(uuid);
     }
