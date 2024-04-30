@@ -11,12 +11,12 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 class InMemoryToDoRepositoryTest {
 
     private static final UUID TEST_UUID = UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087");
-    private static final ToDo TEST_TODO = new ToDo(
+    private static final ToDo TEST_TODO_SAME_UUID1 = new ToDo(
             UUID.fromString("72331291-2088-4FA7-BE89-D2A680FF1B69"),
             "zadanie1",
             LocalDateTime.of(2023, 3, 18, 17, 17, 30)
     );
-    private static final ToDo TEST_TODO2 = new ToDo(
+    private static final ToDo TEST_TODO_SAME_UUID2 = new ToDo(
             UUID.fromString("72331291-2088-4FA7-BE89-D2A680FF1B69"),
             "zadanie2",
             LocalDateTime.of(2024, 3, 18, 17, 17, 30)
@@ -46,34 +46,32 @@ class InMemoryToDoRepositoryTest {
     }
 
     @Test
-    void givenKnownUuidButDifferentActionAndTimeShouldReplaceToDo() {
+    void givenToDoShouldReturnNotEmptyList(){
         //when
-        inMemoryToDoRepository.save(TEST_TODO);
-
-        inMemoryToDoRepository.save(TEST_TODO2);
+        inMemoryToDoRepository.save(TEST_TODO_SAME_UUID1);
 
         //then
-        assertThat(inMemoryToDoRepository.getAll()).contains(TEST_TODO2);
+        assertThat(inMemoryToDoRepository.getAll()).containsExactly(TEST_TODO_SAME_UUID1);
     }
 
     @Test
-    void givenToDoShouldReturnNotEmptyList(){
+    void givenKnownUuidButDifferentActionAndTimeShouldReplaceToDo() {
         //when
-        inMemoryToDoRepository.save(TEST_TODO);
+        inMemoryToDoRepository.save(TEST_TODO_SAME_UUID1);
+        inMemoryToDoRepository.save(TEST_TODO_SAME_UUID2);
 
         //then
-        assertThat(inMemoryToDoRepository.getAll()).isNotEmpty();
+        assertThat(inMemoryToDoRepository.getAll()).containsExactly(TEST_TODO_SAME_UUID2);
     }
 
     @Test
     void givenNextToDoShouldReturnListWithMoreElements(){
         //when
-        inMemoryToDoRepository.save(TEST_TODO);
-        int sizeOfList = inMemoryToDoRepository.getAll().size();
+        inMemoryToDoRepository.save(TEST_TODO_SAME_UUID1);
         inMemoryToDoRepository.save(TEST_TODO3);
 
         //then
-        assertThat(inMemoryToDoRepository.getAll().size()).isGreaterThan(sizeOfList);
+        assertThat(inMemoryToDoRepository.getAll()).containsExactly(TEST_TODO_SAME_UUID1,TEST_TODO3);
     }
 
 
@@ -85,7 +83,6 @@ class InMemoryToDoRepositoryTest {
         //then
         assertThat(thrown).isInstanceOf(NullPointerException.class);
     }
-
 
     @Test
     void givenUnknownUuidInRemoveMethodShouldThrowNoSuchElementException() {
@@ -99,8 +96,8 @@ class InMemoryToDoRepositoryTest {
     @Test
     void givenUuidInRemoveMethodOnListWithOneElementShouldReturnEmptyList(){
         //when
-        inMemoryToDoRepository.save(TEST_TODO);
-        inMemoryToDoRepository.remove(TEST_TODO.uuid());
+        inMemoryToDoRepository.save(TEST_TODO_SAME_UUID1);
+        inMemoryToDoRepository.remove(TEST_TODO_SAME_UUID1.uuid());
 
         //then
         assertThat(inMemoryToDoRepository.getAll()).isEmpty();
@@ -109,13 +106,12 @@ class InMemoryToDoRepositoryTest {
     @Test
     void givenUuidInRemoveMethodOnListWithMoreElementsShouldReturnNotEmptyLists(){
         //when
-        inMemoryToDoRepository.save(TEST_TODO);
+        inMemoryToDoRepository.save(TEST_TODO_SAME_UUID1);
         inMemoryToDoRepository.save(TEST_TODO3);
-        int sizeOfList = inMemoryToDoRepository.getAll().size();
-        inMemoryToDoRepository.remove(TEST_TODO.uuid());
+        inMemoryToDoRepository.remove(TEST_TODO_SAME_UUID1.uuid());
 
         //then
-        assertThat(inMemoryToDoRepository.getAll().size()).isLessThan(sizeOfList);
+        assertThat(inMemoryToDoRepository.getAll()).containsExactly(TEST_TODO3);
     }
 
     @Test
