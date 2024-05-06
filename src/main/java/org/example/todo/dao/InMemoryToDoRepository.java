@@ -13,7 +13,7 @@ public class InMemoryToDoRepository implements ToDoRepository {
 
     public List<ToDo> getAll() {
 
-        return new ArrayList<>(toDoMap.values());
+        return List.copyOf(toDoMap.values());
     }
 
     public void remove(UUID uuid) {
