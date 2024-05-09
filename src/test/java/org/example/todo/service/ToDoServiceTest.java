@@ -1,6 +1,5 @@
 package org.example.todo.service;
 
-
 import org.example.todo.dao.ToDoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,24 +21,22 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class ToDoServiceTest {
 
-    private Clock clock = Clock.fixed(Instant.parse("2023-03-18T17:17:30.00Z"), ZoneId.of("UTC"));
-
-
-    @Mock
-    private ToDoRepository toDoRepository;
-    private ToDoService toDoService;
-
     private static final ToDo TEST_TODO = new ToDo(
             UUID.fromString("72331291-2088-4FA7-BE89-D2A680FF1B69"),
             "zadanie1",
             LocalDateTime.of(2023,3,18,17,17,30)
     );
 
-    @Captor
-    private ArgumentCaptor<ToDo> toDoCaptor;
     private static final UUID TEST_UUID = UUID.fromString("bbcc4621-d88f-4a94-ae2f-b38072bf5087");
 
+    @Mock
+    private ToDoRepository toDoRepository;
 
+    @Captor
+    private ArgumentCaptor<ToDo> toDoCaptor;
+
+    private Clock clock = Clock.fixed(Instant.parse("2023-03-18T17:17:30.00Z"), ZoneId.of("UTC"));
+    private ToDoService toDoService;
 
 
     //given
